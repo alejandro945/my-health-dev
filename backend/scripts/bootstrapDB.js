@@ -28,6 +28,9 @@ module.exports = async function (connectionURL) {
 }
 
 async function importData(database, numEntries) {
+    connectiondb.db.list().then((body) => {
+        console.log(body);
+      });
     // var opts = {
     //     url: url,
     //     nosql: 'couchdb',

@@ -1,0 +1,30 @@
+version: '3'
+services:
+  couchserver:
+    image: couchdb
+    restart: always
+    ports:
+      - "5984:5984"
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=password
+    volumes:
+      - ./dbdata:/opt/couchdb/data
+  server:
+    build: 
+      context: ./backend/
+    ports:
+      - 9000:9000
+    restart: always
+    environment:
+      - PORT=9000
+      - DATABASE_URL=https://admin:password@127.0.0.1:5984
+  client:
+    build: 
+      context: ./frontend/
+    ports:
+      - 8080:8080
+    restart: always
+    environment:
+      - PORT=8080
+      - SERVER_URL=http://localhost:8080/
