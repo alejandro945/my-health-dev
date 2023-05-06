@@ -9,7 +9,5 @@ COPY package*.json ./
 RUN npm install
 # Copiamos todos los archivos generados en nuestro execution enviroment
 COPY . .
-# Puerto expuesto: 9000
-EXPOSE 9000
 # Iniciamos nuestro servidor
 CMD ["npm", "start"]
