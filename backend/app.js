@@ -14,9 +14,8 @@ var database = require('./scripts/database.js');
 var app = express();
 app.set('port', process.env.PORT || 8089);
 app.use(bodyParser.json());
-
-var url;
-if (process.env.DATABASE_URL) {
+var url='http://admin:password@172.190.57.115:5984';
+/*if (process.env.DATABASE_URL) {
     url = process.env.DATABASE_URL;
 } else {
     try {
@@ -24,7 +23,7 @@ if (process.env.DATABASE_URL) {
     } catch(_) {
         throw("Cannot find Database credentials, set DATABASE_URL.")
     }
-}
+}*/
 
 //module.exports = Database(url);
 
@@ -261,3 +260,7 @@ app.get('/listObs/:id', function(req, res) {
 //         console.log(resData)
 //     }
 // }
+app.get('/test', function(req, res) {
+    res.status(200)
+});
+module.exports = app

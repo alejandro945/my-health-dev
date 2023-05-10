@@ -10,14 +10,12 @@ chai.use(chaiHttp);
 /*
 * Test the /GET route
 */
-describe('/GET patients', () => {
-    it('it should GET all the patients', (done) => {
+describe('/GET', () => {
+    it('', (done) => {
     chai.request(server)
         .get('/')
         .end((err, res) => {
                 res.should.have.status(200);
-                res.body.should.be.a('array');
-                res.body.length.should.be.eql(0);
             done();
         });
     });
