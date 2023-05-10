@@ -29,7 +29,7 @@ pipeline{
         stage("Build Application"){
             steps {
                 sh "npm version"
-                sh "cd frontend && npm install && npm run build"
+                sh "cd frontend && npm install"
                 sh "cd .."
                 sh "cd backend && npm install"
                 sh "cd .."
