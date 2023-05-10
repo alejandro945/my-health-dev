@@ -17,7 +17,6 @@ pipeline{
             steps {
                 cleanWs()
             }
-
         }
     
         stage("Checkout from SCM"){
@@ -41,7 +40,7 @@ pipeline{
             steps {
                 sh "cd frontend && npm run test && npm run lint"
                 sh "cd .."
-                sh "cd backend && npm run test"
+                sh "cd backend && npm run test && npm run integration"
                 sh "cd .."
             }
         }
@@ -53,14 +52,6 @@ pipeline{
                     withSonarQubeEnv('sonar') {
                     sh "${scannerHome}/bin/sonar-scanner"
                     }
-                }
-            }
-        }
-
-        stage("Quality Gate") {
-            steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
                 }
             }
         }
@@ -78,7 +69,6 @@ pipeline{
                     }
                 }
             }
-
         }
 
         // stage("Trivy Scan") {
