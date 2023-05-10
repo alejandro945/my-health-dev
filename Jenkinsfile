@@ -39,7 +39,7 @@ pipeline{
 
         stage("Test Application"){
             steps {
-                sh "cd fronted && npm run test && npm run lint"
+                sh "cd frontend && npm run test && npm run lint"
                 sh "cd .."
                 sh "cd backend && npm run test"
                 sh "cd .."
