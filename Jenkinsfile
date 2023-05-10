@@ -1,6 +1,5 @@
 pipeline{
     agent{
-        label "jenkins-agent"
     }
     environment {
         APP_NAME = "my-health"
