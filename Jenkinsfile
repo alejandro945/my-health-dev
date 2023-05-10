@@ -1,6 +1,5 @@
 pipeline{
-    agent{
-    }
+    agent any
     environment {
         APP_NAME = "my-health"
         RELEASE = "1.0.0"
