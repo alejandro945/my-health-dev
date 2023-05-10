@@ -1,5 +1,6 @@
 pipeline{
     agent any
+    
     environment {
         APP_NAME = "my-health"
         RELEASE = "1.0.0"
@@ -9,9 +10,11 @@ pipeline{
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
         // JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
     }
+
     tools{
         nodejs 'NodeJS'
     }
+
     stages{
         stage("Cleanup Workspace"){
             steps {
