@@ -2,74 +2,66 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     http = require('http'),
     fs = require('fs');
-
-
+dotenv = require('dotenv').config();
 const util = require('util')
 
 //var initDatabase = require('./scripts/init_database');
 var bootstrapDB = require('./scripts/bootstrapDB.js');
 var database = require('./scripts/database.js');
 
-
 var app = express();
 app.set('port', process.env.PORT || 8089);
 app.use(bodyParser.json());
-var url='http://admin:password@172.190.57.115:5984';
-/*if (process.env.DATABASE_URL) {
+let url = '';
+if (process.env.DATABASE_URL) {
     url = process.env.DATABASE_URL;
 } else {
     try {
         url = JSON.parse(fs.readFileSync("./credentials.json", "utf-8")).url;
-    } catch(_) {
-        throw("Cannot find Database credentials, set DATABASE_URL.")
+    } catch (_) {
+         console.log("Cannot find Database credentials, set DATABASE_URL.")
     }
-}*/
-
-//module.exports = Database(url);
-
-//initDatabase(function(err){
-//	if (err) {
-//		throw err
-//	}
-//	else{
-//	  console.log("Database initialized");
-//	}
-//});
-
+}
 
 bootstrapDB(url).then(result => {
-        console.log(result)
-    }).then(function(){
-        http.createServer(app).listen(app.get('port'), '0.0.0.0', function() {
-            console.log('Express server listening on port ' + app.get('port'));
-        });
+    console.log(result)
+}).then(function () {
+    http.createServer(app).listen(app.get('port'), '0.0.0.0', function () {
+        console.log('Express server listening on port ' + app.get('port'));
     });
+});
+
+app.get('/test', function (req, res) {
+    res.status(200).send('OK')
+});
 
 app.get('/', function (_, res) {
     // res.send("Node.js API running.")
-    database.use('patients').list({include_docs: true}).then ((data) => {
+    database.use('patients').list({ include_docs: true }).then((data) => {
         res.send(data.rows)
     })
 });
 
-app.post('/login/user', function(req, res){
+app.post('/login/user', function (req, res) {
     var username = req.body.UID;
     var password = req.body.PASS;
 
-    database.use('patients').find({selector: {user_id: username}}).then((data) => {
-        if(data && data.docs && data.docs.length > 0) {
+    database.use('patients').find({ selector: { user_id: username } }).then((data) => {
+        if (data && data.docs && data.docs.length > 0) {
             var patient = data.docs[0]
-            var resData = {"ResultSet Output": [{
-                "CA_ADDRESS": patient.address,
-                "CA_CITY": patient.city,
-                "CA_DOB": patient.birthdate,
-                "CA_FIRST_NAME": patient.first_name,
-                "CA_GENDER": patient.gender,
-                "CA_LAST_NAME": patient.last_name,
-                "CA_POSTCODE": patient.postcode,
-                "CA_USERID": patient.user_id,
-                "PATIENTID": patient.patient_id
-            }]}
+            var resData = {
+                "ResultSet Output": [{
+                    "CA_ADDRESS": patient.address,
+                    "CA_CITY": patient.city,
+                    "CA_DOB": patient.birthdate,
+                    "CA_FIRST_NAME": patient.first_name,
+                    "CA_GENDER": patient.gender,
+                    "CA_LAST_NAME": patient.last_name,
+                    "CA_POSTCODE": patient.postcode,
+                    "CA_USERID": patient.user_id,
+                    "PATIENTID": patient.patient_id
+                }]
+            }
             res.send(resData)
         } else {
             console.error(data)
@@ -83,31 +75,33 @@ app.post('/login/user', function(req, res){
 
 // ef5335dd-db17-491e-8150-20ce24712b06
 
-app.get('/getInfo/patients/:id', function(req, res) {
+app.get('/getInfo/patients/:id', function (req, res) {
     var patientID = req.params.id;
-    database.use('patients').find({selector: {patient_id: patientID}}).then((data) => {
-        if(data && data.docs && data.docs.length > 0) {
+    database.use('patients').find({ selector: { patient_id: patientID } }).then((data) => {
+        if (data && data.docs && data.docs.length > 0) {
             var patient = data.docs[0]
             var returnCode = 0
-            if(data.docs.length == 0) {
+            if (data.docs.length == 0) {
                 returnCode = 1
             }
-            var resData = {"HCCMAREA": {
-                "CA_REQUEST_ID": "01IPAT",
-                "CA_RETURN_CODE": returnCode,
-                "CA_PATIENT_ID": patient.patient_id,
-                "CA_PATIENT_REQUEST": {
-                    "CA_ADDRESS": patient.address,
-                    "CA_CITY": patient.city,
-                    "CA_DOB": patient.birthdate,
-                    "CA_FIRST_NAME": patient.first_name,
-                    "CA_GENDER": patient.gender,
-                    "CA_LAST_NAME": patient.last_name,
-                    "CA_POSTCODE": patient.postcode,
-                    "CA_USERID": patient.user_id,
-                    "PATIENTID": patient.patient_id
+            var resData = {
+                "HCCMAREA": {
+                    "CA_REQUEST_ID": "01IPAT",
+                    "CA_RETURN_CODE": returnCode,
+                    "CA_PATIENT_ID": patient.patient_id,
+                    "CA_PATIENT_REQUEST": {
+                        "CA_ADDRESS": patient.address,
+                        "CA_CITY": patient.city,
+                        "CA_DOB": patient.birthdate,
+                        "CA_FIRST_NAME": patient.first_name,
+                        "CA_GENDER": patient.gender,
+                        "CA_LAST_NAME": patient.last_name,
+                        "CA_POSTCODE": patient.postcode,
+                        "CA_USERID": patient.user_id,
+                        "PATIENTID": patient.patient_id
+                    }
                 }
-            }}
+            }
             res.send(resData)
         } else {
             console.error(data)
@@ -116,13 +110,13 @@ app.get('/getInfo/patients/:id', function(req, res) {
     }).catch((err) => {
         console.error(err)
         res.status(500).send('Error getting patient data for ' + patientID)
-    });    
+    });
 })
 
-app.get('/getInfo/prescription/:id', function(req, res) {
+app.get('/getInfo/prescription/:id', function (req, res) {
     var patientID = req.params.id;
-    database.use('prescriptions').find({selector: {patient_id: patientID}}).then((data) => {
-        if(data && data.docs && data.docs.length > 0) {
+    database.use('prescriptions').find({ selector: { patient_id: patientID } }).then((data) => {
+        if (data && data.docs && data.docs.length > 0) {
             var prescriptions = data.docs
             var prescriptionStr = JSON.stringify(prescriptions)
             prescriptionStr = prescriptionStr.replace(/drug_name/g, "CA_DRUG_NAME")
@@ -135,17 +129,19 @@ app.get('/getInfo/prescription/:id', function(req, res) {
                 delete prescriptions[i]._rev
             }
             var returnCode = 0
-            if(data.docs.length == 0) {
+            if (data.docs.length == 0) {
                 returnCode = 1
             }
-            var resData = {"GETMEDO": {
-                "CA_REQUEST_ID": "01IPAT",
-                "CA_RETURN_CODE": returnCode,
-                "CA_PATIENT_ID": patientID,
-                "CA_LIST_MEDICATION_REQUEST": {
-                    "CA_MEDICATIONS": prescriptions
+            var resData = {
+                "GETMEDO": {
+                    "CA_REQUEST_ID": "01IPAT",
+                    "CA_RETURN_CODE": returnCode,
+                    "CA_PATIENT_ID": patientID,
+                    "CA_LIST_MEDICATION_REQUEST": {
+                        "CA_MEDICATIONS": prescriptions
+                    }
                 }
-            }};
+            };
             res.send(resData)
         } else {
             console.error(data)
@@ -154,14 +150,14 @@ app.get('/getInfo/prescription/:id', function(req, res) {
     }).catch((err) => {
         console.error(err)
         res.status(500).send('Error getting prescription data for ' + patientID)
-    });    
+    });
 })
 
 // See function getAppointments() for correct way to do this, which maxes out rate limit on Lite plan even with caching
-app.get('/appointments/list/:id', function(req,res) {
+app.get('/appointments/list/:id', function (req, res) {
     var patient = req.params.id;
-    database.use('appointments').find({selector: {patient_id: patient}}).then((data) => {
-        if(data && data.docs && data.docs.length > 0) {
+    database.use('appointments').find({ selector: { patient_id: patient } }).then((data) => {
+        if (data && data.docs && data.docs.length > 0) {
             var appointments = data.docs;
             var appointmentsData = []
             for (appointment of appointments) {
@@ -171,7 +167,7 @@ app.get('/appointments/list/:id', function(req,res) {
                     "MED_FIELD": "GENERAL PRACTICE",
                 })
             }
-            var resData = {"ResultSet Output": appointmentsData};
+            var resData = { "ResultSet Output": appointmentsData };
             res.send(resData)
         } else {
             console.error(data)
@@ -184,10 +180,10 @@ app.get('/appointments/list/:id', function(req,res) {
 
 })
 
-app.get('/listObs/:id', function(req, res) {
+app.get('/listObs/:id', function (req, res) {
     var patient = req.params.id;
-    database.use('observations').find({selector: {patient_id: patient}}).then((data) => {
-        if(data && data.docs && data.docs.length > 0) {
+    database.use('observations').find({ selector: { patient_id: patient } }).then((data) => {
+        if (data && data.docs && data.docs.length > 0) {
             var observations = data.docs;
             var observationsData = []
             for (observation of observations) {
@@ -199,15 +195,15 @@ app.get('/listObs/:id', function(req, res) {
                     "UNITS": observation.units,
                     "id": observation.id
                 }
-                if(observation.numeric_value !== ""){
-                    toPush["NUMERICVALUE"]=observation.numeric_value
+                if (observation.numeric_value !== "") {
+                    toPush["NUMERICVALUE"] = observation.numeric_value
                 }
-                if(observation.character_value !== ""){
-                    toPush["CHARACTERVALUE"]=observation.character_value
+                if (observation.character_value !== "") {
+                    toPush["CHARACTERVALUE"] = observation.character_value
                 }
                 observationsData.push(toPush)
             }
-            var resData = {"ResultSet Output": observationsData};
+            var resData = { "ResultSet Output": observationsData };
             res.send(resData)
         } else {
             console.error(data)
@@ -260,7 +256,5 @@ app.get('/listObs/:id', function(req, res) {
 //         console.log(resData)
 //     }
 // }
-app.get('/test', function(req, res) {
-    res.status(200)
-});
+
 module.exports = app
