@@ -9,9 +9,6 @@ pipeline{
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
         // JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
     }
-    tools {
-        nodejs "nodejs"
-    }
     stages{
         stage("Cleanup Workspace"){
             steps {
