@@ -1,5 +1,7 @@
 pipeline{
-    agent any
+    agent { 
+        docker { image 'node:14-alpine' args '-u root' } 
+    }
     environment {
         APP_NAME = "my-health"
         RELEASE = "1.0.0"
