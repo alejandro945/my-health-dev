@@ -26,14 +26,7 @@ pipeline{
         stage("Build Application"){
             steps {
                 sh "ls"
-                workdir('backend') {
-                    sh "npm install"
-                    sh "npm run build"
-                }
-                workdir('fronted') {
-                    sh "npm install"
-                    sh "npm run build"
-                }
+                sh "cd fronted && npm install && npm run build"
             }
 
         }
