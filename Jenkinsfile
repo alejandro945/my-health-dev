@@ -25,6 +25,7 @@ pipeline{
 
         stage("Build Application"){
             steps {
+                sh "ls"
                 workdir('backend') {
                     sh "npm install"
                     sh "npm run build"
