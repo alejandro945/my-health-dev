@@ -25,7 +25,7 @@ pipeline{
 
         stage("Build Application"){
             steps {
-                sh "cd fronted && npm install"
+                sh "cd frontend && npm install && npm run build"
                 sh "cd .."
                 sh "cd backend && npm install"
                 sh "cd .."
