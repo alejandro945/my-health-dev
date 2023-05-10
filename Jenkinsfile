@@ -25,10 +25,14 @@ pipeline{
 
         stage("Build Application"){
             steps {
-                sh "cd fronted && npm install"
-                sh "cd .."
-                sh "cd backend && npm install"
-                sh "cd .."
+                workdir('backend') {
+                    sh "npm install"
+                    sh "npm run build"
+                }
+                workdir('fronted') {
+                    sh "npm install"
+                    sh "npm run build"
+                }
             }
 
         }
