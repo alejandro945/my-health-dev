@@ -1,7 +1,5 @@
 pipeline{
-    agent { 
-        docker { image 'node:14-alpine' args '-u root' } 
-    }
+    agent any
     environment {
         APP_NAME = "my-health"
         RELEASE = "1.0.0"
@@ -10,6 +8,9 @@ pipeline{
         IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
         // JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
+    }
+    tools {
+        nodejs "nodejs"
     }
     stages{
         stage("Cleanup Workspace"){
