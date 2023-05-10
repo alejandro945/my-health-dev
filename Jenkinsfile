@@ -10,7 +10,7 @@ pipeline{
         // JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
     }
     tools{
-        NodeJS '17.0.0'
+        NodeJS 17.0.0
     }
     stages{
         stage("Cleanup Workspace"){
