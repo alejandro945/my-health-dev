@@ -9,6 +9,9 @@ pipeline{
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
         // JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
     }
+    tools{
+        nodejs '17.0.0'
+    }
     stages{
         stage("Cleanup Workspace"){
             steps {
@@ -25,6 +28,7 @@ pipeline{
 
         stage("Build Application"){
             steps {
+                sh "npm version"
                 sh "cd frontend && npm install && npm run build"
                 sh "cd .."
                 sh "cd backend && npm install"
