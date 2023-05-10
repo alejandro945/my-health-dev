@@ -1,76 +1,75 @@
+const generalInfo = {
+  title: 'Example Health Software Architecture',
+  subtitle: 'An Open Source Case Study',
+  description: 'Example Health is an experimental project, and open source reference architecture for integrating a traditional data system, with modern cloud technology.',
+  technologies: ['IBM Z', 'IBM Cloud Kubernetes Service', 'IBM Cloud Private', 'IBM Watson Data Platform', 'IBM API Connect'],
+  pattern: '',
+};
 
-var generalInfo = {
-  title: "Example Health Software Architecture",
-  subtitle: "An Open Source Case Study",
-  description: "Example Health is an experimental project, and open source reference architecture for integrating a traditional data system, with modern cloud technology.",
-  technologies: ["IBM Z", "IBM Cloud Kubernetes Service", "IBM Cloud Private", "IBM Watson Data Platform", "IBM API Connect"],
-  pattern: ""
-}
+const modernAppInfo = {
+  title: 'Writing a Modern Web UI using existing System Z application',
+  subtitle: 'Agile UI development',
+  description: 'In this pattern, we show how to rapidly prototype a new web UI built on Node JS, using HTML5 technology, surfacing traditional data in fresh ways. ',
+  technologies: ['IBM Z', 'IBM Cloud Private', 'IBM API Connect'],
+  pattern: '',
+};
 
-var modernAppInfo = {
-  title: "Writing a Modern Web UI using existing System Z application",
-  subtitle: "Agile UI development",
-  description: "In this pattern, we show how to rapidly prototype a new web UI built on Node JS, using HTML5 technology, surfacing traditional data in fresh ways. ",
-  technologies: ["IBM Z", "IBM Cloud Private", "IBM API Connect"],
-  pattern: ""
-}
+const analyticsInfo = {
+  title: 'A health data analytics app that integrates with historic data',
+  subtitle: 'Creating a full stack big data app',
+  description: 'In this pattern, we build a full stack containerized application that delves into big data, using Node JS and the Watson Data Platform.',
+  technologies: ['IBM Z', 'IBM Cloud Kubernetes Service', 'IBM API Connect'],
+  pattern: '',
+};
 
-var analyticsInfo = {
-  title: "A health data analytics app that integrates with historic data",
-  subtitle: "Creating a full stack big data app",
-  description: "In this pattern, we build a full stack containerized application that delves into big data, using Node JS and the Watson Data Platform.",
-  technologies: ["IBM Z", "IBM Cloud Kubernetes Service", "IBM API Connect"],
-  pattern: ""
-}
+const syntheaInfo = {
+  title: 'Conditioning data on ZOS',
+  subtitle: 'Data preparation from Synthea',
+  description: 'In this pattern, we look at tips and tricks for conditioning big sets of generated data for storage on Db2/zOS.',
+  technologies: ['IBM Z', 'IBM Db2'],
+  pattern: '',
+};
 
-var syntheaInfo = {
-  title: "Conditioning data on ZOS",
-  subtitle: "Data preparation from Synthea",
-  description: "In this pattern, we look at tips and tricks for conditioning big sets of generated data for storage on Db2/zOS.",
-  technologies: ["IBM Z", "IBM Db2"],
-  pattern: ""
-}
+const mlInfo = {
+  title: 'Machine learning with big data and zOS',
+  subtitle: 'Jupiter Notebooks and zOS',
+  description: 'In this pattern, we look at tips and tricks for working with data science and Db2/zOS.',
+  technologies: ['IBM Z', 'IBM Db2'],
+  pattern: '',
+};
 
-var mlInfo = {
-  title: "Machine learning with big data and zOS",
-  subtitle: "Jupiter Notebooks and zOS",
-  description: "In this pattern, we look at tips and tricks for working with data science and Db2/zOS.",
-  technologies: ["IBM Z", "IBM Db2"],
-  pattern: ""
-}
+const apiInfo = {
+  title: 'Connecting zOS with API Connect',
+  subtitle: 'Jupiter Notebooks and zOS',
+  description: 'In this pattern, we show how to liberate mainframe data with hybrid integration.',
+  technologies: ['IBM Z', 'IBM Db2'],
+  pattern: '',
+};
 
-var apiInfo = {
-  title: "Connecting zOS with API Connect",
-  subtitle: "Jupiter Notebooks and zOS",
-  description: "In this pattern, we show how to liberate mainframe data with hybrid integration.",
-  technologies: ["IBM Z", "IBM Db2"],
-  pattern: ""
-}
+let chosenpattern = null;
 
-var chosenpattern = null;
+const c = document.getElementById('canvas');
 
-var c = document.getElementById("canvas");
+const AQUA = '#00ABC0';
+const NAVY = '#0F4C81';
+const AQUALIGHT = '#99DDE5';
+const EXTRALIGHT = '#CCEEF2';
+const HIGHLIGHT = '#F88F58';
+const HIGHFILL = '#fcddcc';
+const HIGHCOMPONENTFILL = '#fab08a';
 
-var AQUA = "#00ABC0";
-var NAVY = "#0F4C81";
-var AQUALIGHT = "#99DDE5";
-var EXTRALIGHT = "#CCEEF2";
-var HIGHLIGHT = "#F88F58";
-var HIGHFILL = "#fcddcc";
-var HIGHCOMPONENTFILL = "#fab08a";
+const LOWFILL = '#e5f6f8';
+const LOWSTROKE = '#cceef2';
+const LOWFONT = '#99dde5';
 
-var LOWFILL = "#e5f6f8";
-var LOWSTROKE = "#cceef2";
-var LOWFONT = "#99dde5";
+const HIGHLIGHTED = 0;
+const DIMMED = 1;
+const NORMAL = 2;
 
-var HIGHLIGHTED = 0;
-var DIMMED = 1;
-var NORMAL = 2;
-
-var DIMMEDORANGE = "fef3ee";
+const DIMMEDORANGE = 'fef3ee';
 
 if (c != undefined) {
-  var ctx = c.getContext("2d");
+  var ctx = c.getContext('2d');
 
   drawDefault();
   ctx.lineWidth = 1;
@@ -78,19 +77,18 @@ if (c != undefined) {
   // c.onmousemove = mouseMove;
 }
 
-
 function mouseMove(e) {
   // important: correct mouse position:
-  var rect = this.getBoundingClientRect(),
-    x = e.clientX - rect.left,
-    y = e.clientY - rect.top,
-    i = 0,
-    r;
+  const rect = this.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const i = 0;
+  let r;
 
-  var element = document.getElementById("archtitle");
+  const element = document.getElementById('archtitle');
   // element.innerHTML = ""
 
-  var general = true;
+  let general = true;
 
   if (x > 5 && x < 205 && y > 50 && y < 170) {
     drawFrontEndPattern();
@@ -121,16 +119,14 @@ function clearCanvas() {
   ctx.beginPath();
   ctx.stroke();
   ctx.lineWidth = 1.5;
-  ctx.fillStyle = "#0F4C81";
+  ctx.fillStyle = '#0F4C81';
   ctx.font = 'bold 12px sans-serif';
-  ctx.fillText("Patient System", 5, 20);
-  ctx.fillText("Analytics System", 455, 20);
+  ctx.fillText('Patient System', 5, 20);
+  ctx.fillText('Analytics System', 455, 20);
 }
 
 function drawFrontEndPattern(source) {
-
   if (chosenpattern == null || chosenpattern != source) {
-
     if (chosenpattern != null) {
       clearSelectedborder(chosenpattern);
     }
@@ -140,16 +136,15 @@ function drawFrontEndPattern(source) {
     clearCanvas();
     console.log('node app');
     displayInfo(modernAppInfo);
-    drawNodeApp("IBM Kubernetes Service", HIGHLIGHTED);
+    drawNodeApp('IBM Kubernetes Service', HIGHLIGHTED);
     drawAPIConnect(HIGHLIGHTED);
     drawCobolProcessing(DIMMED);
     drawzOS(DIMMED);
-    drawContainer("IBM Kubernetes Service", DIMMED);
+    drawContainer('IBM Kubernetes Service', DIMMED);
     drawZOSConnect(DIMMED);
     drawPatientRecords(DIMMED);
     drawWatsonDataPlatform(DIMMED);
     drawSynthea(DIMMED);
-
 
     ctx.strokeStyle = HIGHLIGHT;
     ctx.beginPath();
@@ -157,7 +152,6 @@ function drawFrontEndPattern(source) {
     ctx.stroke();
 
     setSelectedborder(source);
-
   } else {
     clearSelectedborder(source);
 
@@ -168,7 +162,6 @@ function drawFrontEndPattern(source) {
 
 function drawAPIManagementPattern(source) {
   if (chosenpattern == null || chosenpattern != source) {
-
     if (chosenpattern != null) {
       clearSelectedborder(chosenpattern);
     }
@@ -178,11 +171,11 @@ function drawAPIManagementPattern(source) {
     clearCanvas();
     console.log('node app');
     displayInfo(apiInfo);
-    drawNodeApp("IBM Kubernetes Service", DIMMED);
+    drawNodeApp('IBM Kubernetes Service', DIMMED);
     drawAPIConnect(HIGHLIGHTED);
     drawCobolProcessing(HIGHLIGHTED);
     drawzOS(HIGHLIGHTED);
-    drawContainer("IBM Kubernetes Service", DIMMED);
+    drawContainer('IBM Kubernetes Service', DIMMED);
     drawZOSConnect(HIGHLIGHTED);
     drawPatientRecords(HIGHLIGHTED);
     drawWatsonDataPlatform(DIMMED);
@@ -194,7 +187,6 @@ function drawAPIManagementPattern(source) {
     ctx.stroke();
 
     setSelectedborder(source);
-
   } else {
     clearSelectedborder(source);
 
@@ -205,10 +197,10 @@ function drawAPIManagementPattern(source) {
 
 function drawDefault(source) {
   clearCanvas();
-  displayInfo(generalInfo)
-  drawContainer("IBM Kubernetes Service", NORMAL);
-  drawNodeApp("IBM Kubernetes Service", NORMAL);
-  drawAPIConnect(NORMAL)
+  displayInfo(generalInfo);
+  drawContainer('IBM Kubernetes Service', NORMAL);
+  drawNodeApp('IBM Kubernetes Service', NORMAL);
+  drawAPIConnect(NORMAL);
   drawzOS(NORMAL);
   drawSynthea(NORMAL);
   drawWatsonDataPlatform(NORMAL);
@@ -216,8 +208,7 @@ function drawDefault(source) {
 }
 
 function drawWatsonDataPlatform(state) {
-
-  var label = "Watson Data Platform";
+  const label = 'Watson Data Platform';
 
   drawSubsystem(355, 360, 200, 100, label, state);
   drawMachineLearning(state);
@@ -225,7 +216,6 @@ function drawWatsonDataPlatform(state) {
 
 function drawMachineLearningPattern(source) {
   if (chosenpattern == null || chosenpattern != source) {
-
     if (chosenpattern != null) {
       clearSelectedborder(chosenpattern);
     }
@@ -235,11 +225,11 @@ function drawMachineLearningPattern(source) {
     clearCanvas();
     console.log('node app');
     displayInfo(mlInfo);
-    drawNodeApp("IBM Kubernetes Service", DIMMED);
+    drawNodeApp('IBM Kubernetes Service', DIMMED);
     drawAPIConnect(DIMMED);
     drawCobolProcessing(DIMMED);
     drawzOS(DIMMED);
-    drawContainer("IBM Kubernetes Service", DIMMED);
+    drawContainer('IBM Kubernetes Service', DIMMED);
     drawZOSConnect(DIMMED);
     drawPatientRecords(HIGHLIGHTED);
     drawSynthea(DIMMED);
@@ -251,7 +241,6 @@ function drawMachineLearningPattern(source) {
     ctx.stroke();
 
     setSelectedborder(chosenpattern);
-
   } else {
     clearSelectedborder(source);
 
@@ -261,11 +250,8 @@ function drawMachineLearningPattern(source) {
 }
 
 function openpattern() {
-
   if (chosenpattern != null) {
-
     switch (chosenpattern.id) {
-
       case 'patientrecords':
         window.open('https://developer.ibm.com/patterns/transform-load-big-data-csv-files-Db2-zos-database/');
         break;
@@ -291,11 +277,8 @@ function openpattern() {
   }
 }
 
-
 function drawContainerServicePattern(source) {
-
   if (chosenpattern == null || chosenpattern != source) {
-
     if (chosenpattern != null) {
       clearSelectedborder(chosenpattern);
     }
@@ -304,8 +287,8 @@ function drawContainerServicePattern(source) {
 
     clearCanvas();
     console.log('analytics app');
-    drawContainer("IBM Kubernetes Service", HIGHLIGHTED);
-    drawNodeApp("Kubernetes", DIMMED);
+    drawContainer('IBM Kubernetes Service', HIGHLIGHTED);
+    drawNodeApp('Kubernetes', DIMMED);
     drawWatsonDataPlatform(DIMMED);
 
     drawAPIConnect(HIGHLIGHTED);
@@ -330,7 +313,6 @@ function drawContainerServicePattern(source) {
     ctx.stroke();
 
     setSelectedborder(source);
-
   } else {
     clearSelectedborder(source);
 
@@ -340,17 +322,15 @@ function drawContainerServicePattern(source) {
 }
 
 function setSelectedborder(source) {
-  source.style.border = "1px solid " + HIGHLIGHT;
+  source.style.border = `1px solid ${HIGHLIGHT}`;
 }
 
 function clearSelectedborder(source) {
-  source.style.border = "1px solid white";
+  source.style.border = '1px solid white';
 }
 
 function drawPatientRecordsPattern(source) {
-
   if (chosenpattern == null || chosenpattern != source) {
-
     if (chosenpattern != null) {
       clearSelectedborder(chosenpattern);
     }
@@ -360,10 +340,10 @@ function drawPatientRecordsPattern(source) {
     clearCanvas();
     drawzOS(HIGHLIGHTED);
     drawSynthea(HIGHLIGHTED);
-    drawNodeApp("IBM Kubernetes Service", DIMMED);
+    drawNodeApp('IBM Kubernetes Service', DIMMED);
     drawZOSConnect(DIMMED);
     drawMachineLearning(DIMMED);
-    drawContainer("IBM Kubernetes Service", DIMMED);
+    drawContainer('IBM Kubernetes Service', DIMMED);
     drawPatientRecords(HIGHLIGHTED);
     drawAPIConnect(DIMMED);
     drawWatsonDataPlatform(DIMMED);
@@ -376,7 +356,6 @@ function drawPatientRecordsPattern(source) {
     displayInfo(syntheaInfo);
 
     setSelectedborder(source);
-
   } else {
     clearSelectedborder(source);
     chosenpattern = null;
@@ -421,75 +400,70 @@ function connectAnalytics() {
 }
 
 function drawPatientRecords(state) {
-  drawComponent(25, 340, "Patient Records - Db2", state);
+  drawComponent(25, 340, 'Patient Records - Db2', state);
 }
 
 function drawSynthea(state) {
-  drawIsland(5, 430, 200, 50, "Synthea - Data Generation", state);
+  drawIsland(5, 430, 200, 50, 'Synthea - Data Generation', state);
 }
 
 function drawZOSConnect(state) {
-  drawComponent(25, 220, "z/OS Connect", state);
+  drawComponent(25, 220, 'z/OS Connect', state);
 }
 
 function drawAPIConnect(state) {
-  drawIsland(230, 130, 100, 100, "API Connect", state);
+  drawIsland(230, 130, 100, 100, 'API Connect', state);
 }
 
 function drawCobolProcessing(state) {
-  drawComponent(25, 280, "Cobol processing", state);
+  drawComponent(25, 280, 'Cobol processing', state);
 }
 
 function drawAnalyticsUI(state) {
-  drawComponent(375, 90, "Analytics UI - Node JS", state);
+  drawComponent(375, 90, 'Analytics UI - Node JS', state);
 }
 
 function drawAnalyticsApp(state) {
-  drawComponent(375, 150, "Analytics App - Node JS", state);
+  drawComponent(375, 150, 'Analytics App - Node JS', state);
 }
 
 function drawAnalyticsAPI(state) {
-  drawComponent(375, 210, "Analytics API - Node JS", state);
+  drawComponent(375, 210, 'Analytics API - Node JS', state);
 }
 
 function drawDataLake(state) {
-  drawComponent(375, 270, "Allergy data lake - Mongo", state);
+  drawComponent(375, 270, 'Allergy data lake - Mongo', state);
 }
 
 function drawMachineLearning(state) {
-  drawComponent(375, 400, "Machine Learning - Python", state);
+  drawComponent(375, 400, 'Machine Learning - Python', state);
 }
 
 function displayInfo(info) {
-
-  var title = document.getElementById("archtitle");
+  const title = document.getElementById('archtitle');
   title.innerHTML = info.title;
 
   // var subtitle = document.getElementById("subtitle");
   // subtitle.innerHTML = info.subtitle;
 
-  var description = document.getElementById("description");
+  const description = document.getElementById('description');
   description.innerHTML = info.description;
 
-  var techlist = document.getElementById("techlist");
-  techlist.innerHTML = ""
+  const techlist = document.getElementById('techlist');
+  techlist.innerHTML = '';
 
-  info.technologies.forEach(function(technology) {
-
-    var li = document.createElement('li');
+  info.technologies.forEach((technology) => {
+    const li = document.createElement('li');
     li.innerHTML = technology;
     techlist.appendChild(li);
-  })
+  });
 }
 
-
 function drawIsland(x, y, width, height, label, state) {
-
   switch (state) {
-
     case HIGHLIGHTED:
       ctx.fillStyle = HIGHCOMPONENTFILL;
-      ctx.strokeStyle = HIGHLIGHT
+      ctx.strokeStyle = HIGHLIGHT;
 
       break;
 
@@ -510,21 +484,19 @@ function drawIsland(x, y, width, height, label, state) {
   ctx.fillRect(x, y, width, height);
   ctx.strokeRect(x, y, width, height);
   if (state === DIMMED) {
-    ctx.fillStyle = LOWFONT
+    ctx.fillStyle = LOWFONT;
   } else {
-    ctx.fillStyle = NAVY
+    ctx.fillStyle = NAVY;
   }
   ctx.font = 'bold 11px sans-serif';
   ctx.fillText(label, x + 10, y + height / 1.8);
 }
 
 function drawComponent(x, y, label, state) {
-
-  var height = 40;
-  var width = 160;
+  const height = 40;
+  const width = 160;
 
   switch (state) {
-
     case HIGHLIGHTED:
       ctx.fillStyle = HIGHCOMPONENTFILL;
       ctx.strokeStyle = HIGHLIGHT;
@@ -546,9 +518,9 @@ function drawComponent(x, y, label, state) {
   ctx.fillRect(x, y, width, height);
   ctx.strokeRect(x, y, width, height);
   if (state === DIMMED) {
-    ctx.fillStyle = LOWFONT
+    ctx.fillStyle = LOWFONT;
   } else {
-    ctx.fillStyle = NAVY
+    ctx.fillStyle = NAVY;
   }
   ctx.font = 'bold 11px sans-serif';
   ctx.fillText(label, x + 10, y + 25);
@@ -556,24 +528,22 @@ function drawComponent(x, y, label, state) {
 
 function drawNodeApp(label, state) {
   drawSubsystem(5, 50, 200, 100, label, state);
-  drawComponent(25, 90, "Patient UI - Node JS", state);
+  drawComponent(25, 90, 'Patient UI - Node JS', state);
 }
 
 function drawContainer(label, state) {
   drawSubsystem(355, 50, 200, 280, label, state);
-  drawAnalyticsUI(state)
-  drawAnalyticsApp(state)
-  drawAnalyticsAPI(state)
+  drawAnalyticsUI(state);
+  drawAnalyticsApp(state);
+  drawAnalyticsAPI(state);
   drawDataLake(state);
 }
 
 function setColors(state) {
-
   switch (state) {
-
     case HIGHLIGHTED:
       ctx.fillStyle = HIGHFILL;
-      ctx.strokeStyle = HIGHLIGHT
+      ctx.strokeStyle = HIGHLIGHT;
       break;
 
     case NORMAL:
@@ -588,26 +558,25 @@ function setColors(state) {
 
     default:
       ctx.fillStyle = EXTRALIGHT;
-      ctx.strokeStyle = AQUA
+      ctx.strokeStyle = AQUA;
       break;
   }
 }
 
 function drawSubsystem(x, y, width, height, label, state) {
-
   setColors(state);
 
-  var cs = ctx.strokeStyle;
+  const cs = ctx.strokeStyle;
 
   ctx.fillRect(x, y, width, height);
-  fillStripes(ctx, x, y, width, height)
+  fillStripes(ctx, x, y, width, height);
   ctx.strokeStyle = cs;
   ctx.strokeRect(x, y, width, height);
 
   if (state === DIMMED) {
-    ctx.fillStyle = LOWFONT
+    ctx.fillStyle = LOWFONT;
   } else {
-    ctx.fillStyle = NAVY
+    ctx.fillStyle = NAVY;
   }
 
   ctx.font = 'bold 11px sans-serif';
@@ -615,7 +584,7 @@ function drawSubsystem(x, y, width, height, label, state) {
 }
 
 function drawzOS(state) {
-  var label = "z/OS";
+  const label = 'z/OS';
   drawSubsystem(5, 180, 200, 220, label, state);
   drawZOSConnect(state);
   drawCobolProcessing(state);

@@ -1,13 +1,13 @@
-var urlfield = document.getElementById('url');
-var nodebutton = document.getElementById('nodebutton');
-var javabutton = document.getElementById('javabutton');
-var localbutton = document.getElementById('localbutton');
+const urlfield = document.getElementById('url');
+const nodebutton = document.getElementById('nodebutton');
+const javabutton = document.getElementById('javabutton');
+const localbutton = document.getElementById('localbutton');
 
-var MODE = {
-  "TEST": 1,
-  "Z": 2,
-  "OPENSHIFT": 3
-}
+const MODE = {
+  TEST: 1,
+  Z: 2,
+  OPENSHIFT: 3,
+};
 
 function checkurl() {
   if (validURL(urlfield.value)) {
@@ -22,27 +22,25 @@ function checkurl() {
 }
 
 function setRunMode(text) {
-  var rm = document.getElementById('runmode');
+  const rm = document.getElementById('runmode');
   rm.innerHTML = text;
 }
 
 function getMode() {
+  const url = './mode';
 
-  var url = "./mode";
+  const http = new XMLHttpRequest();
 
-  var http = new XMLHttpRequest();
+  http.open('GET', url, true);
 
-  http.open("GET", url, true);
-
-  http.onreadystatechange = function() {
+  http.onreadystatechange = function () {
     if (http.readyState == 4 && http.status == 200) {
-      var patientdata = JSON.parse(http.responseText);
+      const patientdata = JSON.parse(http.responseText);
       console.log(http.responseText);
-      var response = JSON.parse(http.responseText);
-      var mode = parseInt(response.mode);
+      const response = JSON.parse(http.responseText);
+      const mode = parseInt(response.mode);
 
       switch (mode) {
-
         case MODE.TEST:
           highlightLocal();
           break;
@@ -54,36 +52,32 @@ function getMode() {
         case MODE.OPENSHIFT:
           highlightJava();
           break;
-
       }
-
     }
-  }
+  };
   http.send(null);
-
 }
 
 getMode();
 
 function validURL(str) {
-  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-  '((([a-z-\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
-  '((\\d{1,3}\\.){3}\\d{1,3}))'+ // ip (v4) address
-  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ //port
-  '(\\?[;&amp;a-z\\d%_.~+=-]*)?'+ // query string
-  '(\\#[-a-z\\d_]*)?$','i');
+  const pattern = new RegExp('^(https?:\\/\\/)?' // protocol
+  + '((([a-z-\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' // domain name
+  + '((\\d{1,3}\\.){3}\\d{1,3}))' // ip (v4) address
+  + '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' // port
+  + '(\\?[;&amp;a-z\\d%_.~+=-]*)?' // query string
+  + '(\\#[-a-z\\d_]*)?$', 'i');
 
   return !!pattern.test(str);
 }
 
 function highlightJava() {
-  localbutton.classList.remove("settingsbuttonselected");
-  nodebutton.classList.remove("settingsbuttonselected");
+  localbutton.classList.remove('settingsbuttonselected');
+  nodebutton.classList.remove('settingsbuttonselected');
   javabutton.classList.add('settingsbuttonselected');
   javabutton.style.opacity = 1;
   setRunMode('Currently reading data from a Java OpenShift microservice');
 }
-
 
 function chooseJava() {
   if (validURL(urlfield.value)) {
@@ -94,35 +88,31 @@ function chooseJava() {
 }
 
 function highlightNode() {
-  localbutton.classList.remove("settingsbuttonselected");
-  javabutton.classList.remove("settingsbuttonselected");
+  localbutton.classList.remove('settingsbuttonselected');
+  javabutton.classList.remove('settingsbuttonselected');
   nodebutton.classList.add('settingsbuttonselected');
   nodebutton.style.opacity = 1;
   setRunMode('Currently reading data from a Node.js application');
 }
 
 function setModeOnServer(mode) {
+  const url = './mode';
+  const params = `mode=${mode}&url=${urlfield.value}`;
+  console.log(`esto es params ${params}`);
+  const http = new XMLHttpRequest();
 
-  var url = "./mode";
-  var params = "mode=" + mode + "&url=" + urlfield.value;
-  console.log("esto es params "+params);
-  var http = new XMLHttpRequest();
+  http.open('POST', `${url}?${params}`, true);
 
-  http.open("POST", url + "?" + params, true);
-
-  http.onreadystatechange = function() {
+  http.onreadystatechange = function () {
     if (http.readyState == 4 && http.status == 200) {
-
       // sessionStorage.removeItem(patientid);
       // sessionStorage.removeItem(patientusername);
-      sessionStorage.setItem("patientUImode", mode);
+      sessionStorage.setItem('patientUImode', mode);
 
       window.location = '/login.html';
-
     }
-  }
+  };
   http.send(null);
-
 }
 
 function chooseNode() {
@@ -134,8 +124,8 @@ function chooseNode() {
 }
 
 function highlightLocal() {
-  localbutton.classList.add("settingsbuttonselected");
-  javabutton.classList.remove("settingsbuttonselected");
+  localbutton.classList.add('settingsbuttonselected');
+  javabutton.classList.remove('settingsbuttonselected');
   nodebutton.classList.remove('settingsbuttonselected');
   setRunMode('Currently reading data from a Node OpenShift microservice - demo mode');
 }
