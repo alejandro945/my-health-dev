@@ -10,7 +10,7 @@ pipeline{
         IMAGE_NAME_CLIENT = "${ACR_USER}" + "/" + "${APP_NAME}" + "-client"
         IMAGE_NAME_SERVER = "${ACR_USER}" + "/" + "${APP_NAME}" + "-server"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
-        JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
+        JENKINS_API_TOKEN = credentials("jenkins_api_token")
         ACR_CREDENTIALS = credentials('acr_credentials')
     }
 
@@ -51,7 +51,7 @@ pipeline{
             steps {
                 script{
                     def scannerHome = tool 'sonar';
-                    withSonarQubeEnv(credentialsId: 'sonar-credentials') {
+                    withSonarQubeEnv(credentialsId: 'sonar_credentials') {
                         sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=my-health-dev -Dsonar.sources=frontend,backend"
                     }
                 }
