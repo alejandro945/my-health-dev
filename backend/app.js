@@ -31,15 +31,15 @@ bootstrapDB(url).then(result => {
     });
 });
 
-app.get('/test', function (req, res) {
-    res.status(200).send('OK')
-});
-
 app.get('/', function (_, res) {
     // res.send("Node.js API running.")
     database.use('patients').list({ include_docs: true }).then((data) => {
         res.send(data.rows)
     })
+});
+
+app.get('/test', function (req, res) {
+    res.status(200).send('OK')
 });
 
 app.post('/login/user', function (req, res) {
