@@ -70,7 +70,7 @@ pipeline{
 
 
                     withCredentials([usernamePassword(credentialsId: 'acr_credentials', passwordVariable: 'password', usernameVariable: 'username')]) {
-                        sh "docker login -u ${username} -p ${password}"
+                        sh "docker login -u ${username} -p ${password} ${ACR_REPO}"
                         sh "docker push ${IMAGE_NAME_CLIENT}:${IMAGE_TAG}"
                         sh "docker push ${IMAGE_NAME_CLIENT}:latest"
                         sh "docker push ${IMAGE_NAME_SERVER}:${IMAGE_TAG}"
