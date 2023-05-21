@@ -5,15 +5,14 @@ pipeline{
     environment {
         APP_NAME = "my-health"
         RELEASE = "1.0.0"
-        DOCKER_USER = "alejandro945"
-        DOCKER_PASS = 'Alejo1234'
-        IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+        ACR_USER = "myhealthcontainerregistry.azurecr.io"
+        IMAGE_NAME = "${ACR_USER}" + "/" + "${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
         // JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
     }
 
     tools{
-        nodejs 'NodeJS'
+        nodejs 'node'
     }
 
     stages{
@@ -60,17 +59,19 @@ pipeline{
             }
         }
 
-        stage("Build & Push Docker Image") {
+        stage("Buiild Docker Image"){
             steps {
                 script {
-                    docker.withRegistry('',DOCKER_PASS) {
-                        docker_image = docker.build "${IMAGE_NAME}"
-                    }
+                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                }
+            }
+        }
 
-                    docker.withRegistry('',DOCKER_PASS) {
-                        docker_image.push("${IMAGE_TAG}")
-                        docker_image.push('latest')
-                    }
+        stage("Azure Login and push the docker image"){
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'acr_credentials', passwordVariable: 'password', usernameVariable: 'username')]){
+                    sh "docker login -u ${username} -p ${password} ${ACR_USER}.azurecr.io}"
+                    sh "docker image push ${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
