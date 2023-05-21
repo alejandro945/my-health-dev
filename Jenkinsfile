@@ -49,7 +49,7 @@ pipeline{
             }
         }
 
-       /*  stage('SonarQube Analysis') {
+        stage('SonarQube Analysis') {
             steps {
                 script{
                     def scannerHome = tool 'sonar';
@@ -58,7 +58,7 @@ pipeline{
                     }
                 }
             }
-        } */
+        }
 
         stage("Build & Push Docker Images") {
             steps {
@@ -81,14 +81,14 @@ pipeline{
             }
         }
 
-        /* stage("Trivy Scan") {
+        stage("Trivy Scan") {
              steps {
                  script {
 		             sh "docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image ${IMAGE_NAME_CLIENT}:${IMAGE_TAG} --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table"
                      sh "docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image ${IMAGE_NAME_SERVER}:${IMAGE_TAG} --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table"
                  }
              }
-        } */
+        }
 
         stage ('Cleanup Artifacts') {
             steps {
