@@ -68,13 +68,12 @@ pipeline{
                     sh "docker tag ${IMAGE_NAME_CLIENT}:${IMAGE_TAG} ${IMAGE_NAME_CLIENT}:latest"
                     sh "docker tag ${IMAGE_NAME_SERVER}:${IMAGE_TAG} ${IMAGE_NAME_SERVER}:latest"
 
-
                     withCredentials([usernamePassword(credentialsId: 'acr_credentials', passwordVariable: 'password', usernameVariable: 'username')]) {
                         sh "docker login -u ${username} -p ${password} ${ACR_REPO}"
                         sh "docker push ${IMAGE_NAME_CLIENT}:${IMAGE_TAG}"
-                        sh "docker push ${IMAGE_NAME_CLIENT}:latest"
+                        //sh "docker push ${IMAGE_NAME_CLIENT}:latest"
                         sh "docker push ${IMAGE_NAME_SERVER}:${IMAGE_TAG}"
-                        sh "docker push ${IMAGE_NAME_SERVER}:latest"
+                        //sh "docker push ${IMAGE_NAME_SERVER}:latest"
                     }
             
                 }
@@ -84,8 +83,8 @@ pipeline{
         stage("Trivy Scan") {
              steps {
                  script {
-		             sh "docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image' ${IMAGE_NAME_CLIENT}:${IMAGE_TAG} --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table"
-                     sh "docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image' ${IMAGE_NAME_SERVER}:${IMAGE_TAG} --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table"
+		             sh "docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image ${IMAGE_NAME_CLIENT}:${IMAGE_TAG} --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table"
+                     sh "docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image ${IMAGE_NAME_SERVER}:${IMAGE_TAG} --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table"
                  }
              }
         }
@@ -94,9 +93,9 @@ pipeline{
             steps {
                 script {
                     sh "docker rmi ${IMAGE_NAME_CLIENT}:${IMAGE_TAG}"
-                    sh "docker rmi ${IMAGE_NAME_CLIENT}:latest"
+                    //sh "docker rmi ${IMAGE_NAME_CLIENT}:latest"
                     sh "docker rmi ${IMAGE_NAME_SERVER}:${IMAGE_TAG}"
-                    sh "docker rmi ${IMAGE_NAME_SERVER}:latest"
+                    //sh "docker rmi ${IMAGE_NAME_SERVER}:latest"
                 }
             }
         }
