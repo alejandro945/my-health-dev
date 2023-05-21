@@ -1,5 +1,5 @@
 pipeline{
-    
+
     agent any
 
     environment {
@@ -53,7 +53,7 @@ pipeline{
                 script{
                     def scannerHome = tool 'sonar';
                     withSonarQubeEnv(credentialsId: 'sonar-credentials') {
-                        sh "${scannerHome}/bin/sonar-scanner"
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=my-health -Dsonar.sources=src"
                     }
                 }
             }
