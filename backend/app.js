@@ -27,7 +27,7 @@ bootstrapDB(url).then(result => {
     console.log(result)
 }).then(function () {
     http.createServer(app).listen(app.get('port'), '0.0.0.0', function () {
-        console.log('Express server listening on port ' + app.get('port'));
+        console.log('Express test server listening on port ' + app.get('port'));
     });
 });
 
