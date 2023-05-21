@@ -65,11 +65,11 @@ app.post('/login/user', function (req, res) {
             res.send(resData)
         } else {
             console.error(data)
-            res.status(500).send('User "' + username + '" not found')
+            res.status(500).send('User "' + username + '" not found Alejo test')
         }
     }).catch((err) => {
         console.error(err)
-        res.status(500).send('User "' + username + '" not found')
+        res.status(500).send('User "' + username + '" not found Alejo test')
     });
 })
 
