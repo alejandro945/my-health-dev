@@ -47,12 +47,12 @@ pipeline{
                 sh "cd .."
             }
         }
-        
+
         stage('SonarQube Analysis') {
             steps {
                 script{
                     def scannerHome = tool 'sonar';
-                    withSonarQubeEnv('sonar') {
+                    withSonarQubeEnv('SonarOwn') {
                     sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
