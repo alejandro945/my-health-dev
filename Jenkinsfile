@@ -5,7 +5,7 @@ pipeline{
     environment {
         APP_NAME = "my-health"
         RELEASE = "1.0.0"
-        ACR_USER = "myhealthcontainerregistry.azurecr.io"
+        ACR_USER = "myHealthContainerRegistry"
         IMAGE_NAME_CLIENT = "${ACR_USER}" + "/" + "${APP_NAME}" + "-client"
         IMAGE_NAME_SERVER = "${ACR_USER}" + "/" + "${APP_NAME}" + "-server"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
@@ -64,20 +64,16 @@ pipeline{
         stage("Build & Push Docker Images") {
             steps {
                 script {
+                    docker_image_client = docker.build("${IMAGE_NAME_CLIENT}", "./frontend")
+                    docker_image_server = docker.build("${IMAGE_NAME_SERVER}", "./backend")
+                    
                     docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
-                        docker_image = docker.build("${IMAGE_NAME_CLIENT}", "./frontend")
+                        docker_image_client.push("${IMAGE_TAG}")
+                        docker_image_client.push('latest')
                     }
                     docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
-                        docker_image.push("${IMAGE_TAG}")
-                        docker_image.push('latest')
-                    }
-
-                    docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
-                        docker_image = docker.build("${IMAGE_NAME_SERVER}", "./backend")
-                    }
-                    docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
-                        docker_image.push("${IMAGE_TAG}")
-                        docker_image.push('latest')
+                        docker_image_server.push("${IMAGE_TAG}")
+                        docker_image_server.push('latest')
                     }
                 }
             }
@@ -110,6 +106,6 @@ pipeline{
                 }
             }
         }
-        
+
     }
 }
