@@ -6,9 +6,11 @@ pipeline{
         APP_NAME = "my-health"
         RELEASE = "1.0.0"
         ACR_USER = "myhealthcontainerregistry.azurecr.io"
-        IMAGE_NAME = "${ACR_USER}" + "/" + "${APP_NAME}"
+        IMAGE_NAME_CLIENT = "${ACR_USER}" + "/" + "${APP_NAME}" + "-client"
+        IMAGE_NAME_SERVER = "${ACR_USER}" + "/" + "${APP_NAME}" + "-server"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
         JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
+        ACR_CREDENTIALS = credentials('acr_credentials')
     }
 
     tools{
@@ -59,19 +61,30 @@ pipeline{
             }
         }
 
-        stage("Buiild Docker Image"){
+        stage("Build & Push Docker Images") {
             steps {
                 script {
-                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
-                }
-            }
-        }
+                    sh "ls"
+                    dir('./frontend') {
+                        docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
+                            docker_image = docker.build "${IMAGE_NAME_CLIENT}"
+                        }
 
-        stage("Azure Login and push the docker image"){
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'acr_credentials', passwordVariable: 'password', usernameVariable: 'username')]){
-                    sh "docker login -u ${username} -p ${password} ${ACR_USER}.azurecr.io}"
-                    sh "docker image push ${IMAGE_NAME}:${IMAGE_TAG}"
+                        docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
+                            docker_image.push("${IMAGE_TAG}")
+                            docker_image.push('latest')
+                        }
+                    }
+                    dir('./backend') {
+                        docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
+                            docker_image = docker.build "${IMAGE_NAME_SERVER}"
+                        }
+
+                        docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
+                            docker_image.push("${IMAGE_TAG}")
+                            docker_image.push('latest')
+                        }
+                    }
                 }
             }
         }
@@ -79,7 +92,8 @@ pipeline{
         stage("Trivy Scan") {
              steps {
                  script {
-		             sh "docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image' ${IMAGE_NAME}:${IMAGE_TAG} --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table"
+		             sh "docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image' ${IMAGE_NAME_CLIENT}:${IMAGE_TAG} --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table"
+                     sh "docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image' ${IMAGE_NAME_SERVER}:${IMAGE_TAG} --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table"
                  }
              }
         }
@@ -87,8 +101,10 @@ pipeline{
         stage ('Cleanup Artifacts') {
             steps {
                 script {
-                    sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
-                    sh "docker rmi ${IMAGE_NAME}:latest"
+                    sh "docker rmi ${IMAGE_NAME_CLIENT}:${IMAGE_TAG}"
+                    sh "docker rmi ${IMAGE_NAME_CLIENT}:latest"
+                    sh "docker rmi ${IMAGE_NAME_SERVER}:${IMAGE_TAG}"
+                    sh "docker rmi ${IMAGE_NAME_SERVER}:latest"
                 }
             }
         }
