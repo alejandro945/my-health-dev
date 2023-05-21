@@ -6,9 +6,9 @@ pipeline{
     environment {
         APP_NAME = "my-health"
         RELEASE = "1.0.0"
-        ACR_USER = "myHealthContainerRegistry"
-        IMAGE_NAME_CLIENT = "${ACR_USER}" + "/" + "${APP_NAME}" + "-client"
-        IMAGE_NAME_SERVER = "${ACR_USER}" + "/" + "${APP_NAME}" + "-server"
+        ACR_REPO = "ajm"
+        IMAGE_NAME_CLIENT = "${ACR_REPO}" + "/" + "${APP_NAME}" + "-client"
+        IMAGE_NAME_SERVER = "${ACR_REPO}" + "/" + "${APP_NAME}" + "-server"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
         JENKINS_API_TOKEN = credentials("jenkins_api_token")
         ACR_CREDENTIALS = credentials('acr_credentials')
@@ -68,7 +68,7 @@ pipeline{
                     sh "docker tag ${IMAGE_NAME_SERVER}:${IMAGE_TAG} ${IMAGE_NAME_SERVER}:latest"
 
                     sh "docker login -u ${ACR_USER} -p ${ACR_CREDENTIALS}"
-                    
+
                     sh "docker push ${IMAGE_NAME_CLIENT}:${IMAGE_TAG}"
                     sh "docker push ${IMAGE_NAME_CLIENT}:latest"
                     sh "docker push ${IMAGE_NAME_SERVER}:${IMAGE_TAG}"
