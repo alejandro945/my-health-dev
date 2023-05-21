@@ -64,26 +64,20 @@ pipeline{
         stage("Build & Push Docker Images") {
             steps {
                 script {
-                    sh "ls"
-                    dir('./frontend') {
-                        docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
-                            docker_image = docker.build "${IMAGE_NAME_CLIENT}"
-                        }
-
-                        docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
-                            docker_image.push("${IMAGE_TAG}")
-                            docker_image.push('latest')
-                        }
+                    docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
+                        docker_image = docker.build("${IMAGE_NAME_CLIENT}", "./frontend")
                     }
-                    dir('./backend') {
-                        docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
-                            docker_image = docker.build "${IMAGE_NAME_SERVER}"
-                        }
+                    docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
+                        docker_image.push("${IMAGE_TAG}")
+                        docker_image.push('latest')
+                    }
 
-                        docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
-                            docker_image.push("${IMAGE_TAG}")
-                            docker_image.push('latest')
-                        }
+                    docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
+                        docker_image = docker.build("${IMAGE_NAME_SERVER}", "./backend")
+                    }
+                    docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
+                        docker_image.push("${IMAGE_TAG}")
+                        docker_image.push('latest')
                     }
                 }
             }
