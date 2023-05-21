@@ -7,6 +7,7 @@ pipeline{
         APP_NAME = "my-health"
         RELEASE = "1.0.0"
         ACR_REPO = "ajm"
+        ACR_USER = "myHealthContainerRegistry"
         IMAGE_NAME_CLIENT = "${ACR_REPO}" + "/" + "${APP_NAME}" + "-client"
         IMAGE_NAME_SERVER = "${ACR_REPO}" + "/" + "${APP_NAME}" + "-server"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
