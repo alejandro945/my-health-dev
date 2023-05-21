@@ -61,17 +61,19 @@ pipeline{
         stage("Build & Push Docker Images") {
             steps {
                 script {
-                    docker_image_client = docker.build("${IMAGE_NAME_CLIENT}", "./frontend")
-                    docker_image_server = docker.build("${IMAGE_NAME_SERVER}", "./backend")
+                    sh "docker build -t ${IMAGE_NAME_CLIENT}:${IMAGE_TAG} ./frontend"
+                    sh "docker build -t ${IMAGE_NAME_SERVER}:${IMAGE_TAG} ./backend"
+
+                    sh "docker tag ${IMAGE_NAME_CLIENT}:${IMAGE_TAG} ${IMAGE_NAME_CLIENT}:latest"
+                    sh "docker tag ${IMAGE_NAME_SERVER}:${IMAGE_TAG} ${IMAGE_NAME_SERVER}:latest"
+
+                    sh "docker login -u ${ACR_USER} -p ${ACR_CREDENTIALS}"
                     
-                    docker.withRegistry('http://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
-                        docker_image_client.push("${IMAGE_TAG}")
-                        docker_image_client.push('latest')
-                    }
-                    docker.withRegistry('http://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
-                        docker_image_server.push("${IMAGE_TAG}")
-                        docker_image_server.push('latest')
-                    }
+                    sh "docker push ${IMAGE_NAME_CLIENT}:${IMAGE_TAG}"
+                    sh "docker push ${IMAGE_NAME_CLIENT}:latest"
+                    sh "docker push ${IMAGE_NAME_SERVER}:${IMAGE_TAG}"
+                    sh "docker push ${IMAGE_NAME_SERVER}:latest"
+            
                 }
             }
         }
