@@ -53,7 +53,7 @@ pipeline{
                 script{
                     def scannerHome = tool 'sonar';
                     withSonarQubeEnv(credentialsId: 'sonar-credentials') {
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=my-health -Dsonar.sources=src"
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=my-health-dev -Dsonar.sources=frontend,backend"
                     }
                 }
             }
