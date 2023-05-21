@@ -14,10 +14,6 @@ pipeline{
         ACR_CREDENTIALS = credentials('acr_credentials')
     }
 
-    tools{
-        nodejs 'node'
-    }
-
     stages{
         stage("Cleanup Workspace"){
             steps {
