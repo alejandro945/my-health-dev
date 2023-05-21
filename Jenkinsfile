@@ -67,11 +67,11 @@ pipeline{
                     docker_image_client = docker.build("${IMAGE_NAME_CLIENT}", "./frontend")
                     docker_image_server = docker.build("${IMAGE_NAME_SERVER}", "./backend")
                     
-                    docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
+                    docker.withRegistry('http://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
                         docker_image_client.push("${IMAGE_TAG}")
                         docker_image_client.push('latest')
                     }
-                    docker.withRegistry('https://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
+                    docker.withRegistry('http://myhealthcontainerregistry.azurecr.io',ACR_CREDENTIALS) {
                         docker_image_server.push("${IMAGE_TAG}")
                         docker_image_server.push('latest')
                     }
@@ -106,6 +106,5 @@ pipeline{
                 }
             }
         }
-
     }
 }
