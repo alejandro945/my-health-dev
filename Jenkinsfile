@@ -8,7 +8,7 @@ pipeline{
         ACR_USER = "myhealthcontainerregistry.azurecr.io"
         IMAGE_NAME = "${ACR_USER}" + "/" + "${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
-        // JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
+        JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
     }
 
     tools{
@@ -76,30 +76,30 @@ pipeline{
             }
         }
 
-        // stage("Trivy Scan") {
-        //     steps {
-        //         script {
-		//             sh (`'docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image alejandro945/my-health-dev:1.0.0-'${BUILD_NUMBER} '--no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table'`)
-        //         }
-        //     }
-        // }
+        stage("Trivy Scan") {
+             steps {
+                 script {
+		             sh (`'docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image' ${IMAGE_NAME}:${IMAGE_TAG} '--no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table'`)
+                 }
+             }
+        }
 
-        // stage ('Cleanup Artifacts') {
-        //     steps {
-        //         script {
-        //             sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
-        //             sh "docker rmi ${IMAGE_NAME}:latest"
-        //         }
-        //     }
-        // }
+        stage ('Cleanup Artifacts') {
+            steps {
+                script {
+                    sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker rmi ${IMAGE_NAME}:latest"
+                }
+            }
+        }
 
 
-        // stage("Trigger CD Pipeline") {
-        //     steps {
-        //         script {
-        //             sh "curl -v -k --user admin:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'buildWithParameters?token=gitops-token'"
-        //         }
-        //     }
-        // }
+        stage("Trigger CD Pipeline") {
+            steps {
+                script {
+                    sh "curl -v -k --user admin:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'buildWithParameters?token=gitops-token'"
+                }
+            }
+        }
     }
 }
