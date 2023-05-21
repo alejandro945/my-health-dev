@@ -6,7 +6,7 @@ pipeline{
     environment {
         APP_NAME = "my-health"
         RELEASE = "1.0.0"
-        ACR_REPO = "ajm"
+        ACR_REPO = "myhealthcontainerregistry.azurecr.io"
         ACR_USER = "myHealthContainerRegistry"
         IMAGE_NAME_CLIENT = "${ACR_REPO}" + "/" + "${APP_NAME}" + "-client"
         IMAGE_NAME_SERVER = "${ACR_REPO}" + "/" + "${APP_NAME}" + "-server"
@@ -68,12 +68,14 @@ pipeline{
                     sh "docker tag ${IMAGE_NAME_CLIENT}:${IMAGE_TAG} ${IMAGE_NAME_CLIENT}:latest"
                     sh "docker tag ${IMAGE_NAME_SERVER}:${IMAGE_TAG} ${IMAGE_NAME_SERVER}:latest"
 
-                    sh "docker login -u ${ACR_USER} -p ${ACR_CREDENTIALS}"
 
-                    sh "docker push ${IMAGE_NAME_CLIENT}:${IMAGE_TAG}"
-                    sh "docker push ${IMAGE_NAME_CLIENT}:latest"
-                    sh "docker push ${IMAGE_NAME_SERVER}:${IMAGE_TAG}"
-                    sh "docker push ${IMAGE_NAME_SERVER}:latest"
+                    withCredentials([usernamePassword(credentialsId: 'acr_credentials', passwordVariable: 'password', usernameVariable: 'username')]) {
+                        sh "docker login -u ${username} -p ${password}"
+                        sh "docker push ${IMAGE_NAME_CLIENT}:${IMAGE_TAG}"
+                        sh "docker push ${IMAGE_NAME_CLIENT}:latest"
+                        sh "docker push ${IMAGE_NAME_SERVER}:${IMAGE_TAG}"
+                        sh "docker push ${IMAGE_NAME_SERVER}:latest"
+                    }
             
                 }
             }
