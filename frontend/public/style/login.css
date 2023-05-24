@@ -6,6 +6,7 @@ body {
   margin: 20px 0px 20px 0px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #2CC06B;
 }
 
 p {
